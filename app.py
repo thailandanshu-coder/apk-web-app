@@ -12,11 +12,23 @@ def home():
         <button type="submit">Run Tool</button>
     </form>
     '''
+import subprocess
 
 @app.route('/run', methods=['POST'])
 def run_tool():
-    os.system("python apk_login_remover.py")
-    return "Task Completed ✅"
+    result = subprocess.run(
+        ["python3", "apk_login_remover.py"],
+        capture_output=True,
+        text=True
+    )
+
+    return f"""
+    <h3>Output:</h3>
+    <pre>{result.stdout}</pre>
+
+    <h3>Error (if any):</h3>
+    <pre>{result.stderr}</pre>
+    """
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
